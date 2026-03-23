@@ -11,10 +11,45 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [message, setMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setMessage("(UI Only) 회원가입 버튼을 눌렀습니다. 다음 단계에서 API를 연결합니다.");
+    setMessage(null);
+
+    if (!email || !password) {
+      setMessage("이메일과 비밀번호를 입력해주세요.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password, name }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        // 서버에서 전달한 에러 메시지를 우선으로 사용
+        setMessage(data?.error ?? "회원가입 중 문제가 발생했어요.");
+        setLoading(false);
+        return;
+      }
+
+      // 성공 시 바로 로그인 토큰 등을 받음. (현재는 토큰 저장 로직 없이 성공 메시지만 표시)
+      setMessage("회원가입이 완료되었습니다. 환영합니다!");
+      setEmail("");
+      setPassword("");
+      setName("");
+    } catch (err) {
+      setMessage("네트워크 오류가 발생했어요. 다시 시도해주세요.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -61,8 +96,8 @@ export default function SignupPage() {
 
           {message && <p className="text-sm text-cyan-700">{message}</p>}
 
-          <Button type="submit" className="w-full">
-            회원가입
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? "처리중..." : "회원가입"}
           </Button>
         </form>
 
