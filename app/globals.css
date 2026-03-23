@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* printtie tokens */
+  --pt-primary: #0891b2;
+  --pt-secondary: #22d3ee;
+  --pt-cta: #22c55e;
+  --pt-background: #ecfeff;
+  --pt-surface: #f8feff;
+  --pt-text-primary: #164e63;
+  --pt-text-secondary: #0f4b57;
+  --pt-border: #a5f3fc;
+  --pt-error: #ef4444;
+  --pt-success: #10b981;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--pt-background);
+  color: var(--pt-text-primary);
+}
+
+/* Slightly tighter default rendering to resemble Figma */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
